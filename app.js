@@ -4,7 +4,7 @@ const exphbs = require('express-handlebars');
 const nodemailer = require('nodemailer');
 const path = require('path');
 const mailgunTransport = require('nodemailer-mailgun-transport')
-require('dotenv').config()
+if (process.env.NODE_ENV !== 'production') require('dotenv').config({ silent: process.env.NODE_ENV === 'production' })
 
 
 // Configure transport options
