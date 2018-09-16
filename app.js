@@ -4,6 +4,7 @@ const exphbs = require('express-handlebars');
 const nodemailer = require('nodemailer');
 const path = require('path');
 const mailgunTransport = require('nodemailer-mailgun-transport')
+const HttpStatus = require('http-status-codes');
 if (process.env.NODE_ENV !== 'production') require('dotenv').config({
   silent: process.env.NODE_ENV === 'production'
 })
@@ -47,7 +48,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
@@ -65,30 +66,24 @@ app.get('/', (req, res) => {
 
 app.post('/send', (req, res) => {
   console.log(req.body);
-  const output = `
-    <p>You have a new contact request</p>
-    <h3>Contact Details</h3>
-    <ul>
-      <li>NameFrom: ${req.body.nameFrom}</li>
-      <li>EmailFrom: ${req.body.emailFrom}</li>
-      <li>NameTo: ${req.body.nameTo}</li>
-      <li>EmailTo: ${req.body.emailTo}</li>
-      <li>Message: ${req.body.message}</li>
-    </ul>
-  `;
 
+  console.log("--- from ", '"' + req.body.nameFrom + '" <' + req.body.emailFrom + '>')
 
   emailClient = nodemailer.createTransport(transport)
-  sendText('fmurillo@gmail.com', '"Frazko" <fmurillo@gmail.com>', 'YEY!', 'Doing something great!!!\n' + output)
+  sendText(req.body.emailTo, '"' + req.body.nameFrom + '" <' + req.body.emailFrom + '>', 'Reporte de ' + req.body.nameFrom + ' - ' + req.body.date, req.body.report)
     .then(() => {
       // Email sent successfully
-      console.log("SUCCESS");
+      console.log("SUCCESS " + Date.now());
+      res.status(HttpStatus.OK).send({response:'success'});
     })
-    .catch(() => {
+    .catch((err) => {
       // Error sending email
-      console.log("ERROR");
+      console.log("ERROR ", err);
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send({
+          error: HttpStatus.getStatusText(HttpStatus.INTERNAL_SERVER_ERROR)
+        });
     })
-
 });
 
 function sendText(to, from, subject, text) {
@@ -97,7 +92,6 @@ function sendText(to, from, subject, text) {
       from: from,
       to,
       subject,
-      text: 'Hello world?', // plain text body
       html: text // html body
     }, (err, info) => {
       if (err) {
