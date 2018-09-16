@@ -13,13 +13,14 @@
   <div class="container">
     <h1>Node Emailer</h1>
     <p>Send a post to /send with the data:</p>
-    <p>
-      <h3>Contact Details</h3>
-      <h1>TBD</h1>
-
-      <h3>Message</h3>
-      <p>${req.body.message}</p>
-    </p>
+    <h3>Contact Details</h3>
+    <ul>
+      <li>NameFrom: ${req.body.nameFrom}</li>
+      <li>EmailFrom: ${req.body.emailFrom}</li>
+      <li>NameTo: ${req.body.nameTo}</li>
+      <li>EmailTo: ${req.body.emailTo}</li>
+      <li>Message: ${req.body.message}</li>
+    </ul>
   </div>
 </body>
 
