@@ -66,9 +66,6 @@ app.get('/', (req, res) => {
 
 app.post('/send', (req, res) => {
   console.log(req.body);
-
-  console.log("--- from ", '"' + req.body.nameFrom + '" <' + req.body.emailFrom + '>')
-
   emailClient = nodemailer.createTransport(transport)
   sendText(req.body.emailTo, '"' + req.body.nameFrom + '" <' + req.body.emailFrom + '>', 'Reporte de ' + req.body.nameFrom + ' - ' + req.body.date, req.body.report)
     .then(() => {
