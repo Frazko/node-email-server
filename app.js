@@ -4,7 +4,9 @@ const exphbs = require('express-handlebars');
 const nodemailer = require('nodemailer');
 const path = require('path');
 const mailgunTransport = require('nodemailer-mailgun-transport')
-if (process.env.NODE_ENV !== 'production') require('dotenv').config({ silent: process.env.NODE_ENV === 'production' })
+if (process.env.NODE_ENV !== 'production') require('dotenv').config({
+  silent: process.env.NODE_ENV === 'production'
+})
 
 
 // Configure transport options
@@ -61,18 +63,17 @@ app.post('/send', (req, res) => {
     <p>You have a new contact request</p>
     <h3>Contact Details</h3>
     <ul>
-      <li>Name: ${req.body.name}</li>
-      <li>Company: ${req.body.company}</li>
-      <li>Email: ${req.body.email}</li>
-      <li>Phone: ${req.body.phone}</li>
+      <li>NameFrom: ${req.body.nameFrom}</li>
+      <li>EmailFrom: ${req.body.emailFrom}</li>
+      <li>NameTo: ${req.body.nameTo}</li>
+      <li>EmailTo: ${req.body.emailTo}</li>
+      <li>Message: ${req.body.message}</li>
     </ul>
-    <h3>Message</h3>
-    <p>${req.body.message}</p>
   `;
 
 
   emailClient = nodemailer.createTransport(transport)
-  sendText('fmurillo@gmail.com', '"Frazko" <fmurillo@gmail.com>', 'YEY!', 'Doing something great!!!\n'+output)
+  sendText('fmurillo@gmail.com', '"Frazko" <fmurillo@gmail.com>', 'YEY!', 'Doing something great!!!\n' + output)
     .then(() => {
       // Email sent successfully
       console.log("SUCCESS");
